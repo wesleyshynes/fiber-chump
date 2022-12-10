@@ -37,13 +37,11 @@ function App() {
       <Canvas>
         <ambientLight />
         <BasedCamera
-          cameraPosition={cameraPosition}
           position={[
             cameraPosition.x,
             cameraPosition.y,
             cameraPosition.z,
           ]}
-          cameraRotation={cameraRotation}
           rotation={[
             cameraRotation.x,
             cameraRotation.y,
