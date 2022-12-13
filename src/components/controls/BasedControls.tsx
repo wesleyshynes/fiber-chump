@@ -31,19 +31,22 @@ export default function (props: any) {
             <div className="rotation-controls">
                 Rotation Controls: <br />
                 <div className="x-axis">
-                    X: {radToDeg(cameraRotation.x)}
-                    <button onClick={() => updateRotation('x', -10)}>-</button>
-                    <button onClick={() => updateRotation('x', 10)}>+</button>
+                    X: {cameraRotation.x}
+                    {/* X: {radToDeg(cameraRotation.x)} */}
+                    <button onClick={() => updateRotation('x', -1)}>-</button>
+                    <button onClick={() => updateRotation('x', 1)}>+</button>
                 </div>
                 <div className="y-axis">
-                    Y: {radToDeg(cameraRotation.y)}
-                    <button onClick={() => updateRotation('y', -10)}>-</button>
-                    <button onClick={() => updateRotation('y', 10)}>+</button>
+                    Y: {cameraRotation.y}
+                    {/* Y: {radToDeg(cameraRotation.y)} */}
+                    <button onClick={() => updateRotation('y', -1)}>-</button>
+                    <button onClick={() => updateRotation('y', 1)}>+</button>
                 </div>
                 <div className="z-axis">
-                    Z: {radToDeg(cameraRotation.z)}
-                    <button onClick={() => updateRotation('z', -10)}>-</button>
-                    <button onClick={() => updateRotation('z', 10)}>+</button>
+                    Z: {cameraRotation.z}
+                    {/* Z: {radToDeg(cameraRotation.z)} */}
+                    <button onClick={() => updateRotation('z', -1)}>-</button>
+                    <button onClick={() => updateRotation('z', 1)}>+</button>
                 </div>
             </div>
         </div>
