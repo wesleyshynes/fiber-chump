@@ -8,15 +8,26 @@ import BasedControls from './components/controls/BasedControls';
 import { degToRad, radToDeg } from 'three/src/math/MathUtils';
 import { Euler, Vector3 } from 'three';
 
-function App() {
-  const [cameraPosition, setCameraPosition] = useState(new Vector3(0,-10,0));
-  const [cameraTarget, setCameraTarget] = useState(new Vector3(0,0,0));
-  const [cameraRotation, setCameraRotation] = useState(new Euler(0,0,0));
+const CAMERA_START = new Vector3(0, -10, 0)
+const CAMERA_ROTATION = new Euler(degToRad(90), 0, 0)
 
+function App() {
+  const [cameraPosition, setCameraPosition] = useState(CAMERA_START);
+  const [cameraRotation, setCameraRotation] = useState(CAMERA_ROTATION);
 
   const updateCameraPosition = (axis: string, value: number) => {
     const newCameraPosition: any = { ...cameraPosition };
     newCameraPosition[axis] += value;
+    setCameraPosition(newCameraPosition);
+  }
+
+  const updateCameraPositionByAxis = (coords: {x: number, y: number, z: number}) => {
+    const newCameraPosition: any = { ...cameraPosition };
+    const {x, y, z} = coords
+    newCameraPosition['x'] += x;
+    newCameraPosition['y'] += y;
+    newCameraPosition['z'] += z;
+    // newCameraPosition[axis] += value;
     setCameraPosition(newCameraPosition);
   }
 
@@ -26,32 +37,20 @@ function App() {
     setCameraRotation(newCameraRotation);
   }
 
-  const updateCameraTarget = (axis: string, value: number) => {
-    const newCameraTarget: any = { ...cameraTarget };
-    newCameraTarget[axis] += value;
-
-    setCameraTarget(new Vector3(newCameraTarget.x, newCameraTarget.y, newCameraTarget.z));
-  }
-
-
   return (
     <div className="App">
-      <Canvas>
+      <Canvas
+        camera={{
+          position: cameraPosition,
+          rotation: cameraRotation
+        }}
+      >
         <ambientLight />
         <BasedCamera
           cameraPosition={cameraPosition}
           cameraRotation={cameraRotation}
-          cameraTarget={cameraTarget}
-        // position={[
-        //   cameraPosition.x,
-        //   cameraPosition.y,
-        //   cameraPosition.z,
-        // ]}
-        // rotation={[
-        //   cameraRotation.x,
-        //   cameraRotation.y,
-        //   cameraRotation.z,
-        // ]} 
+          updatePosition={updateCameraPositionByAxis}
+          updateRotation={updateCameraRotation}
         />
         <pointLight position={[10, 10, 10]} />
         <BasedBox position={[-1.2, 0, 0]} />
@@ -59,12 +58,10 @@ function App() {
         <BasedPlane position={[0, 0, -2]} />
       </Canvas>
       <BasedControls
-        updatePosition={updateCameraPosition}
-        updateRotation={updateCameraTarget}
-        // updateRotation={updateCameraRotation}
         cameraPosition={cameraPosition}
-        cameraRotation={cameraTarget}
-        // cameraRotation={cameraRotation}
+        updatePosition={updateCameraPosition}
+        cameraRotation={cameraRotation}
+        updateRotation={updateCameraRotation}
       />
     </div>
   );

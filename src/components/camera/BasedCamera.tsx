@@ -1,49 +1,77 @@
-import { useEffect, useRef } from "react";
-import { useThree, useFrame } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
+import { Vector3 } from 'three';
+import { lerp } from "three/src/math/MathUtils";
+import controlsService from '../../services/ControlsService';
 
 export const BasedCamera = (props: any) => {
   const {
     cameraPosition,
-    cameraTarget,
-    // cameraRotation,
-    // zoom,
+    updatePosition,
+    cameraRotation,
+    updateRotation
   } = props
-  const ref: any = useRef();
-  const ballRef: any = useRef();
-  const set = useThree((state) => state.set);
-  useEffect(() => void set({ camera: ref.current }), []);
+
   useFrame((state, delta) => {
 
-    // ref && ref.current ? ref.current.updateMatrixWorld() : null
     const step = 0.1
-    // state.camera.fov = THREE.MathUtils.lerp(state.camera.fov, zoom ? 10 : 42, step)
-    // state.camera.rotation = THREE.MathUtils.lerp(cameraRotation, step)
+    const turnStep = 0.2
+
+    const pressedKeys = controlsService.pressedKeys
+    if (pressedKeys['KeyA'] || pressedKeys['ArrowLeft']) {
+      updateRotation('_y', 1)
+    }
+    if (pressedKeys['KeyD'] || pressedKeys['ArrowRight']) {
+      updateRotation('_y', -1)
+    }
+    if (pressedKeys['KeyW'] || pressedKeys['ArrowUp']) {
+      const direction = new Vector3()
+      state.camera.getWorldDirection(direction)
+      updatePosition({
+        x: direction.x * step, 
+        y: direction.y * step,
+        z: 0
+      })
+    }
+
+    if (pressedKeys['KeyQ']) {
+      const direction = new Vector3()
+      state.camera.getWorldDirection(direction)
+      updatePosition({
+        x: -direction.y * step, 
+        y: direction.x * step,
+        z: 0
+      })
+    }
+
+    if (pressedKeys['KeyE']) {
+      const direction = new Vector3()
+      state.camera.getWorldDirection(direction)
+      updatePosition({
+        x: direction.y * step, 
+        y: -direction.x * step,
+        z: 0
+      })
+    }
+
+    if (pressedKeys['KeyS'] || pressedKeys['ArrowDown']) {
+      const direction = new Vector3()
+      state.camera.getWorldDirection(direction)
+      updatePosition({
+        x: -direction.x * step, 
+        y: -direction.y * step,
+        z: 0
+      })
+    }
+
     state.camera.position.lerp(cameraPosition, step)
 
-    // THREE.Quaternion.slerp(state.camera.quaternion, cameraRotation, state.camera.quaternion, step)
+    // rotate towards the target x
+    const newX = lerp(state.camera.rotation.x, cameraRotation._x, turnStep)
+    const newY = lerp(state.camera.rotation.y, cameraRotation._y, turnStep)
+    const newZ = lerp(state.camera.rotation.z, cameraRotation._z, turnStep)
 
-    // lookAtPos.x = Math.sin(state.clock.getElapsedTime() * 2)
-    if(ballRef && ballRef.current) {
-      ballRef.current.position.lerp(cameraTarget, step)
-      state.camera.lookAt(ballRef.current.position)
-      state.camera.rotation.y = 0
-    }
-    // state.camera.updateProjectionMatrix()
+    state.camera.rotation.set(newX, newY, newZ)
+    // state.camera.rotation.set(cameraRotation._x, cameraRotation._y, cameraRotation._z)
   });
-  return (
-    <>
-      <perspectiveCamera ref={ref} />
-      <mesh
-        position={[0, 0, 0]}
-        ref={ballRef}
-        scale={1}
-      // onClick={(event) => click(!clicked)}
-      // onPointerOver={(event) => hover(true)}
-      // onPointerOut={(event) => hover(false)}
-      >
-        <sphereGeometry args={[0.5, 8, 8]} />
-        <meshStandardMaterial color={'red'} />
-      </mesh>
-    </>
-  );
+  return null;
 };

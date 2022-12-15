@@ -7,22 +7,23 @@ export default function (props: any) {
         cameraPosition,
         cameraRotation,
     } = props
+
     return (
         <div className="control-container">
             <div className="position-controls">
                 Position Controls: <br />
                 <div className="x-axis">
-                    X: {cameraPosition.x}
+                    X: {cameraPosition.x.toFixed(2)}
                     <button onClick={() => updatePosition('x', -1)}>-</button>
                     <button onClick={() => updatePosition('x', 1)}>+</button>
                 </div>
                 <div className="y-axis">
-                    Y: {cameraPosition.y}
+                    Y: {cameraPosition.y.toFixed(2)}
                     <button onClick={() => updatePosition('y', -1)}>-</button>
                     <button onClick={() => updatePosition('y', 1)}>+</button>
                 </div>
                 <div className="z-axis">
-                    Z: {cameraPosition.z}
+                    Z: {cameraPosition.z.toFixed(2)}
                     <button onClick={() => updatePosition('z', -1)}>-</button>
                     <button onClick={() => updatePosition('z', 1)}>+</button>
                 </div>
@@ -31,23 +32,20 @@ export default function (props: any) {
             <div className="rotation-controls">
                 Rotation Controls: <br />
                 <div className="x-axis">
-                    X: {cameraRotation.x}
-                    {/* X: {radToDeg(cameraRotation.x)} */}
-                    <button onClick={() => updateRotation('x', -1)}>-</button>
-                    <button onClick={() => updateRotation('x', 1)}>+</button>
+                    X: {Math.round(radToDeg(cameraRotation._x))}
+                    <button onClick={() => updateRotation('_x', -15)}>-</button>
+                    <button onClick={() => updateRotation('_x', 15)}>+</button>
                 </div>
                 <div className="y-axis">
-                    Y: {cameraRotation.y}
-                    {/* Y: {radToDeg(cameraRotation.y)} */}
-                    <button onClick={() => updateRotation('y', -1)}>-</button>
-                    <button onClick={() => updateRotation('y', 1)}>+</button>
+                    Y: {Math.round(radToDeg(cameraRotation._y))}
+                    <button onClick={() => updateRotation('_y', -15)}>-</button>
+                    <button onClick={() => updateRotation('_y', 15)}>+</button>
                 </div>
-                <div className="z-axis">
-                    Z: {cameraRotation.z}
-                    {/* Z: {radToDeg(cameraRotation.z)} */}
-                    <button onClick={() => updateRotation('z', -1)}>-</button>
-                    <button onClick={() => updateRotation('z', 1)}>+</button>
-                </div>
+                {/* <div className="z-axis">
+                    Z: {Math.round(radToDeg(cameraRotation._z))}
+                    <button onClick={() => updateRotation('_z', -10)}>-</button>
+                    <button onClick={() => updateRotation('_z', 10)}>+</button>
+                </div> */}
             </div>
         </div>
     )
