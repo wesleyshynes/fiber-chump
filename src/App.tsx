@@ -7,8 +7,9 @@ import { useState } from 'react';
 import BasedControls from './components/controls/BasedControls';
 import { degToRad, radToDeg } from 'three/src/math/MathUtils';
 import { Euler, Vector3 } from 'three';
+import { LEVEL_FLOOR, LEVEL_TILE_SIZE } from './components/constants/LevelConstants';
 
-const CAMERA_START = new Vector3(0, -10, 0)
+const CAMERA_START = new Vector3(0, -10, 2)
 const CAMERA_ROTATION = new Euler(degToRad(90), 0, 0)
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
 
   const updateCameraRotation = (axis: string, value: number) => {
     const newCameraRotation: any = { ...cameraRotation };
-    newCameraRotation[axis] = degToRad(radToDeg(newCameraRotation[axis]) + value);
+    newCameraRotation[axis] = degToRad((radToDeg(newCameraRotation[axis]) + value)%360);
     setCameraRotation(newCameraRotation);
   }
 
@@ -42,7 +43,8 @@ function App() {
       <Canvas
         camera={{
           position: cameraPosition,
-          rotation: cameraRotation
+          rotation: cameraRotation,
+          fov: 60,
         }}
       >
         <ambientLight />
@@ -53,9 +55,16 @@ function App() {
           updateRotation={updateCameraRotation}
         />
         <pointLight position={[10, 10, 10]} />
-        <BasedBox position={[-1.2, 0, 0]} />
-        <BasedBox position={[1.2, 0, 0]} />
-        <BasedPlane position={[0, 0, -2]} />
+        <BasedBox position={[-1.2, 0, 2]} />
+        <BasedBox position={[1.2, 0, 2]} />
+        <BasedPlane position={[-2.5, 0, 2.5]} rotation={new Euler(0, degToRad(90), 0)} />
+        {LEVEL_FLOOR.map((tile: any, index: number) => (
+          <BasedPlane key={index} position={[
+            tile[0],
+            tile[1] * LEVEL_TILE_SIZE,
+            tile[2]
+          ]} />
+        ))}
       </Canvas>
       <BasedControls
         cameraPosition={cameraPosition}

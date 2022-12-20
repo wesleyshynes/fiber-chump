@@ -13,15 +13,16 @@ export const BasedCamera = (props: any) => {
 
   useFrame((state, delta) => {
 
-    const step = 0.1
-    const turnStep = 0.2
+    const step = 5 * delta
+    const turnStep = 80 * delta
+    // console.log(delta)
 
     const pressedKeys = controlsService.pressedKeys
     if (pressedKeys['KeyA'] || pressedKeys['ArrowLeft']) {
-      updateRotation('_y', 1)
+      updateRotation('_y', turnStep)
     }
     if (pressedKeys['KeyD'] || pressedKeys['ArrowRight']) {
-      updateRotation('_y', -1)
+      updateRotation('_y', -turnStep)
     }
     if (pressedKeys['KeyW'] || pressedKeys['ArrowUp']) {
       const direction = new Vector3()

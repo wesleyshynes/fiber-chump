@@ -1,3 +1,5 @@
+import { DoubleSide } from "three";
+
 export default function BasedPlane(props: any) {
     return (
         <mesh
@@ -8,8 +10,8 @@ export default function BasedPlane(props: any) {
             // onPointerOver={(event) => hover(true)}
             // onPointerOut={(event) => hover(false)}
             >
-            <planeGeometry args={[5, 5, 3]} />
-            <meshStandardMaterial color={'brown'} />
+            <planeGeometry args={[5, 5, 3, 3]} />
+            <meshStandardMaterial color={'blue'} side={DoubleSide} />
         </mesh>
     )
 }  
