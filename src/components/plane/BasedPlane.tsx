@@ -11,7 +11,7 @@ export default function BasedPlane(props: any) {
             // onPointerOut={(event) => hover(false)}
             >
             <planeGeometry args={[5, 5, 3, 3]} />
-            <meshStandardMaterial color={'blue'} side={DoubleSide} />
+            <meshPhongMaterial color={'blue'} side={DoubleSide} />
         </mesh>
     )
 }  
