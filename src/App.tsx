@@ -16,15 +16,17 @@ function App() {
   const [cameraPosition, setCameraPosition] = useState(CAMERA_START);
   const [cameraRotation, setCameraRotation] = useState(CAMERA_ROTATION);
 
+  const [extraWall, setExtraWall] = useState(false);
+
   const updateCameraPosition = (axis: string, value: number) => {
     const newCameraPosition: any = { ...cameraPosition };
     newCameraPosition[axis] += value;
     setCameraPosition(newCameraPosition);
   }
 
-  const updateCameraPositionByAxis = (coords: {x: number, y: number, z: number}) => {
+  const updateCameraPositionByAxis = (coords: { x: number, y: number, z: number }) => {
     const newCameraPosition: any = { ...cameraPosition };
-    const {x, y, z} = coords
+    const { x, y, z } = coords
     newCameraPosition['x'] += x;
     newCameraPosition['y'] += y;
     newCameraPosition['z'] += z;
@@ -34,7 +36,7 @@ function App() {
 
   const updateCameraRotation = (axis: string, value: number) => {
     const newCameraRotation: any = { ...cameraRotation };
-    newCameraRotation[axis] = degToRad((radToDeg(newCameraRotation[axis]) + value)%360);
+    newCameraRotation[axis] = degToRad((radToDeg(newCameraRotation[axis]) + value) % 360);
     setCameraRotation(newCameraRotation);
   }
 
@@ -53,17 +55,37 @@ function App() {
           cameraRotation={cameraRotation}
           updatePosition={updateCameraPositionByAxis}
           updateRotation={updateCameraRotation}
+          toggleFunction={() => setExtraWall(!extraWall)}
         />
         <pointLight position={[10, 10, 10]} />
-        <BasedBox position={[-1.2, 0, 2]} />
-        <BasedBox position={[1.2, 0, 2]} />
-        <BasedPlane position={[-2.5, 0, 2.5]} rotation={new Euler(0, degToRad(90), 0)} />
+        <BasedBox meshProps={{
+          position: [-1.2, 0, 2]
+        }} />
+        <BasedBox meshProps={{
+          position: [1.2, 0, 2]
+        }} />
+        <BasedPlane meshProps={{
+          position: [-2.5, 0, 2.5],
+          rotation: new Euler(0, degToRad(90), 0),
+        }} />
+
+        {extraWall && (
+          <BasedPlane meshProps={{
+            position: [2.5, 0, 2.5],
+            rotation: new Euler(0, degToRad(90), 0),
+          }} />
+        )}
+
         {LEVEL_FLOOR.map((tile: any, index: number) => (
-          <BasedPlane key={index} position={[
-            tile[0],
-            tile[1] * LEVEL_TILE_SIZE,
-            tile[2]
-          ]} />
+          <BasedPlane
+            key={index}
+            meshProps={{
+              position: [
+                tile[0] * LEVEL_TILE_SIZE,
+                tile[1] * LEVEL_TILE_SIZE,
+                tile[2] * LEVEL_TILE_SIZE
+              ]
+            }} />
         ))}
       </Canvas>
       <BasedControls

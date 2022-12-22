@@ -1,4 +1,5 @@
 import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react';
 import { Vector3 } from 'three';
 import { lerp } from "three/src/math/MathUtils";
 import controlsService from '../../services/ControlsService';
@@ -8,8 +9,11 @@ export const BasedCamera = (props: any) => {
     cameraPosition,
     updatePosition,
     cameraRotation,
-    updateRotation
+    updateRotation,
+    toggleFunction
   } = props
+
+  const lastPress = useRef(0)
 
   useFrame((state, delta) => {
 
@@ -18,6 +22,14 @@ export const BasedCamera = (props: any) => {
     // console.log(delta)
 
     const pressedKeys = controlsService.pressedKeys
+
+    if (pressedKeys['KeyV'] && Date.now() - lastPress.current > 300) {
+      lastPress.current = Date.now()
+      if (toggleFunction) {
+        toggleFunction()
+      }
+    }
+
     if (pressedKeys['KeyA'] || pressedKeys['ArrowLeft']) {
       updateRotation('_y', turnStep)
     }
@@ -28,7 +40,7 @@ export const BasedCamera = (props: any) => {
       const direction = new Vector3()
       state.camera.getWorldDirection(direction)
       updatePosition({
-        x: direction.x * step, 
+        x: direction.x * step,
         y: direction.y * step,
         z: 0
       })
@@ -38,7 +50,7 @@ export const BasedCamera = (props: any) => {
       const direction = new Vector3()
       state.camera.getWorldDirection(direction)
       updatePosition({
-        x: -direction.y * step, 
+        x: -direction.y * step,
         y: direction.x * step,
         z: 0
       })
@@ -48,7 +60,7 @@ export const BasedCamera = (props: any) => {
       const direction = new Vector3()
       state.camera.getWorldDirection(direction)
       updatePosition({
-        x: direction.y * step, 
+        x: direction.y * step,
         y: -direction.x * step,
         z: 0
       })
@@ -58,7 +70,7 @@ export const BasedCamera = (props: any) => {
       const direction = new Vector3()
       state.camera.getWorldDirection(direction)
       updatePosition({
-        x: -direction.x * step, 
+        x: -direction.x * step,
         y: -direction.y * step,
         z: 0
       })

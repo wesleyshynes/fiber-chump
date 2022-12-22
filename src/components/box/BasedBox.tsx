@@ -2,6 +2,7 @@ import { useRef, useState } from "react"
 import { useFrame } from '@react-three/fiber'
 
 export default function BasedBox(props: any) {
+    const { meshProps } = props
     // This reference gives us direct access to the THREE.Mesh object
     const ref: any = useRef()
     // Hold state for hovered and clicked events
@@ -12,7 +13,7 @@ export default function BasedBox(props: any) {
     // Return the view, these are regular Threejs elements expressed in JSX
     return (
         <mesh
-            {...props}
+            {...meshProps}
             ref={ref}
             scale={clicked ? 1.5 : 1}
             onClick={(event) => click(!clicked)}
